@@ -1,0 +1,79 @@
+ZAD1
+CREATE TABLE pracownik (id INT AUTO_INCREMENT, imie Varchar(50) NOT NULL, nazwisko VARCHAR(100) NOT NULL, data_urodzenia DATE, stanowisko ENUM ("sprzedawca", 'magazynier', 'ksiegowa', PRIMARY KEY(id);
+ZAD2
+INSERT INTO pracownik (id, imie, nazwisko, data_urodzenia, stanowisko) VALUES 
+('Mirek','Malanowski', '12-12-1998', 2 ),
+('Marek','Malonowski', '12-12-1988', 1 ),
+('Jarek','Malinowski', '12-12-1978', 0 );
+ZAD3
+CREATE TABLE dzial (id INT AUTO_INCREMENT PRIMARY KEY, nazwa VARCHAR(255));
+zad4
+INSERT INTO dzial (id, nazwa) VALUES
+('sprzedaz'),
+('ksiegowosc'),
+('magazyn');
+zad5 
+ALTER TABLE pracownik ALTER COLUMN stanowisko SET DEFAULT 'sprzedawca';
+zad6
+ALTER TABLE pracownik ADD COLUMN pensja DECIMAL (7,2);
+UPDATE pracownik SET pensja = 4200.00 WHERE nazwisko 'malanowski';
+zad7
+ALTER TABLE dzial CHANGE COLUMN id iddzialu INT AUTO_INCREMENT PRIMARY KEY;
+ALTER TABLE dzial CHANGE column nazwa nazwadzialu VARCHAR(255);
+ALTER TABLE pracownik CHANGE COLUMN id id_pracownika INT AUTO_INCREMENT PRIMARY KEY;
+zad8
+DELETE FROM pracownik ORDER BY DESC LIMIT 1;
+zad9
+ALTER TABLE pracownik ADD COLUMN dzial INT;
+ALTER TABLE pracownik ADD CONSTRAINT  fk_pracownik_dzial FOREIGN KEY (dzial) REFERENCES dzial(iddzialu)
+ON DELETE RESTRICT 
+ON UPDATE CASCADE;
+jedno zad. sprawdzajace spojnosc
+UPDATE pracownik SET dzial = (SELECT iddzialu FROM dzial WHERE nazwadzialu='sprzedaż') WHERE stanowisko ='sprzedawca';
+zad10
+CREATE TABLE stanowisko (idstanowiska INT AUTO_INCREMENT PRIMARY KEY, nazwastanowiska VARCHAR(50) UNIQUE);
+INSERT INTO stanowisko (nazwastanowiska) SELECT DISTINCT CAST(stanowisko AS CHAR) FROM pracownik WHERE stanowisko IS NOT NULL;
+zad11
+ALTER TABLE pracownik ADD COLUMN idstanowiska INT;
+UPDATE pracownik p.JOIN stanowisko ON s.nazwastanowiska = CAST(p.stanowisko AS CHAR) SET p.idstanowiska  = s.idstanowiska;
+ 
+ALTER TABLE pracownik DROP COLUMN stanowisko;
+ALTER TALBE pracownik ADD CONSTRAINT fk_pracownik_stanowisko FOREIGN KEY (idstanowiska) REFERENCES stanowisko(idstanowiska) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+zad12
+ALTER TABLE pracownik DROP FOREIGN KEY fk_pracownik_dzial;
+ALTER TABLE pracownik ADD CONSTARINT fk_pracownik_dzial FOREIGN KEY (dzial) REFERENCES dzial(iddzialu) ON DELETE SET NULL ON UPDATE CASCADE;
+
+cz1
+SELECT nazwisko FROM pracownik ORDER BY nazwisko ASC;
+
+SELECT imie,nazwisko, pensja FROM pracownik WHERE YEAR(data_urodzenia) > 1979;
+
+SELECT * FROM pracownik WHERE pensja BETWEEN 3500 AND 5000;
+
+SELECT  * FROM stanmagazynowy WHERE ilosc > 10;
+
+SELECT * FROM towar WHERE nazwa REGEXP '^[ABC]';
+
+SELECT * FROM klient WHERE typklienta ='indywidualny';
+
+SELECT * FROM zamowienie ORDER BY datautworzenia DESC LIMIT 10;
+
+SELECT imie, nazwisko, pensja FROM pracownik ORDER BY pensja ASC LIMIT 5;
+
+SELECT * FROM towar WHERE nazwa NOT LIKE '%a%' ORDER BY cena_zakupu  DESC LIMIT 10;
+
+SELECT * FROM towar WHERE jednostka_miary.nazwa ='szt' ORDR BY nazwa ASC, cena_zakupu DESC;
+
+CREATE TABLE towar_powyzej_100 AS SELECT * FROM towar WHERE cena_zakupu >= 100;
+
+CREATE TABLE pracownik50plus LIKE pracownik;
+INSERT INTO pracownik50plus SELECT * FROM pracownik WHERE TIMESTAMPDIFF(YEAR, data_urodzenia, CURDATE()) >= 50;
+
+cz2
+
+SELECT p.imie, p.nazwisko, d.nazwadzialu FROM pracownik p LEFT JOIN dzial d ON d.iddzialu = p.dzial;
+
+SELECT t.nazwa, k.nazwa, s.ilosc FROM stan_magazynowy 
+
+
